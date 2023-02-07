@@ -83,7 +83,7 @@ def searchBorderIslands(matrix, n , m, indices, k, isLast):
                 current_mod = []
 
     if(isLast and status == True):
-        mod_count += len(current_mod)
+        mod_count += len(current_mod) # actualization
         mod_list = np.concatenate((mod_list, current_mod))
 
     return mod_list, mod_count

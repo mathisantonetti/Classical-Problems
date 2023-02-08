@@ -42,7 +42,7 @@ def searchBorder(matrix, n , m):
             L.append([n-1,j])
     return L
 
-def searchBorderIslands(matrix, n , m, indices, k, isLast):
+def searchBorderIslands(matrix, n , m, indices, k, isLast, dir):
     # Parameters
 # (matrix, n, m) : a matrix (numpy array expected) with n rows and m columns
 # indices : list of indices of 1s that are connected to a 1 in the border
@@ -73,7 +73,7 @@ def searchBorderIslands(matrix, n , m, indices, k, isLast):
             i, j, di, dj = i0+(1-switch)*u*addit, j0+switch*u*addit, switch*u, (1 - switch)*(-u)
             if(matrix[i,j] == 1):
                 current_mod.append([i,j])
-                if(connected(matrix, i, j, di, dj, k, mod_list, n, m)):
+                if(connected(matrix, i, j, dir*di, dir*dj, k, mod_list, n, m)):
                     status = True
                 if(isLast and (1 <= addit) and (addit <= N-2) and (matrix[i-di,j-dj] == 1)): # recuperate missed points for interior nodes
                     current_mod.append([i-di,j-dj])
@@ -103,8 +103,13 @@ def removeIslandsCut(matrix, K):
 
     # search the non-island 1s
     while(c >= 1 and k < min(K+1, min(n//2 + (n%2), m//2 + (m%2)))):
-        indices, c = searchBorderIslands(matrix, n, m, indices, k, k == min(K+1, min(n//2 + (n%2), m//2 + (m%2)))-1)
+        indices, c = searchBorderIslands(matrix, n, m, indices, k, k == min(K+1, min(n//2 + (n%2), m//2 + (m%2)))-1, 1)
         k += 1
+
+    k -= 1
+    while(k >= 1):
+        indices, c = searchBorderIslands(matrix, n, m, indices, k, False, -1)
+        k -= 1
 
     # put non-island 1s in the new matrix
     for i in range(len(indices)):
@@ -130,7 +135,6 @@ def run_test(num_test, K):
     elif(num_test == 1):
         print("small test with the ")
         Mat = np.array([[0, 0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 1, 1, 0, 1, 0, 0, 0], [0, 1, 1, 0, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1], [0, 0, 1, 1, 1, 0, 0, 0, 0], [0, 1, 0, 0, 1, 0, 1, 0, 0], [1, 1, 0, 0, 0, 0, 1, 0, 1], [0, 0, 1, 1, 1, 0, 0, 0, 1]])
-
     print("matrix : \n")
     print(Mat)
     print("\n Matrix without islands : \n")
@@ -141,17 +145,24 @@ def run_test(num_test, K):
 # functionality test case
 def run_globaltestcase(num_test):
     M = np.zeros((2, 2))
+    print("Running the tool removeIslands on a ")
     if(num_test == 0):
+        print("tiny test with the ")
         M = np.array([[0, 0, 0, 0, 0], [0, 0, 1, 1, 0], [0, 1, 1, 0, 0], [0, 0, 0, 0, 0], [0, 0, 1, 1, 1], [0, 1, 0, 0, 1], [1, 1, 0, 0, 0], [0, 0, 1, 1, 1]])
     elif(num_test == 1):
+        print("simple and small test with the ")
         M = np.array([[0, 0, 0, 0, 0, 1, 0, 0], [0, 0, 1, 1, 0, 1, 0, 0], [0, 1, 1, 0, 1, 1, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 1, 1, 1, 0, 0, 0], [0, 1, 0, 0, 1, 0, 1, 0], [1, 1, 0, 0, 0, 0, 1, 0], [0, 0, 1, 1, 1, 0, 0, 0]])
-    
-    print("Matrix tested : \n")
+    elif(num_test == 2):
+        print("complex and small test with the ")
+        M = np.array([[0, 0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 1, 1, 0, 1, 0, 0, 0], [0, 1, 1, 0, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1], [0, 0, 1, 1, 1, 0, 1, 1, 0], [0, 1, 0, 0, 1, 0, 1, 0, 0], [1, 1, 0, 0, 0, 1, 1, 0, 1], [0, 0, 1, 1, 1, 0, 0, 0, 1]])
+    print("matrix tested : \n")
     print(M)
     print("\n Matrix without islands : \n")
     print(removeIslands(M))
     print("\n")
 
-run_test(1, 2)
+#run_test(1, 2)
 
-#run_globaltestcase(1)
+run_globaltestcase(2)
+run_globaltestcase(1)
+run_globaltestcase(0)

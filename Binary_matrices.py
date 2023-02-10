@@ -1,4 +1,5 @@
 ### Classical problems modelled with binary matrices ###
+# _ Island removal
 # _ Island search
 
 # Author : Mathis Antonetti
@@ -47,6 +48,8 @@ def searchBorderIslands(matrix, n , m, indices, k, isLast, dir):
 # (matrix, n, m) : a matrix (numpy array expected) with n rows and m columns
 # indices : list of indices of 1s that are connected to a 1 in the border
 # k : current layer
+# isLast : it is the final layer
+# dir : search direction
     # returns (mod_list, mod_count) where : 
 # _ mod_list is the current list of indices of 1s that are connected to a 1 in the border
 # _ mod_count is the count of modifications needed for the layer k
@@ -94,6 +97,7 @@ def searchBorderIslands(matrix, n , m, indices, k, isLast, dir):
 def removeIslandsCut(matrix, K):
     # Parameters
 # matrix : a binary matrix (as numpy array)
+# K : number of layer taken into account
     # Returns the modified matrix without islands
     m, n = len(matrix[0]), len(matrix)
     matrix2 = np.zeros((n, m)) # initialization
